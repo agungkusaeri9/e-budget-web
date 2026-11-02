@@ -1,0 +1,98 @@
+# ==============================================================================
+# Docker Compose Configuration (Example)
+# Salin file ini menjadi docker-compose.yml:
+#   cp docker-compose.example.yml docker-compose.yml
+#
+# Pastikan global-network sudah tersedia sebelum menjalankan:
+#   docker network create global-network
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. Aplikasi Laravel (PHP-FPM 8.4)
+  # ----------------------------------------------------------------------------
+  app:
+    container_name: e_budget_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    volumes:
+      - .:/var/www/html
+    deploy:
+      resources:
+        limits:
+          cpus: '${APP_CPU_LIMIT:-1.5}'
+          memory: ${APP_MEM_LIMIT:-1024M}
+        reservations:
+          cpus: '${APP_CPU_RESERVATION:-0.25}'
+          memory: ${APP_MEM_RESERVATION:-256M}
+    mem_limit: ${APP_MEM_LIMIT:-1024M}
+    cpus: ${APP_CPU_LIMIT:-1.5}
+    networks:
+      - global-network
+
+  # ----------------------------------------------------------------------------
+  # 2. Web Server (Nginx)
+  # ----------------------------------------------------------------------------
+  web:
+    container_name: e_budget_web
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - .:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    deploy:
+      resources:
+        limits:
+          cpus: '${WEB_CPU_LIMIT:-0.5}'
+          memory: ${WEB_MEM_LIMIT:-256M}
+        reservations:
+          cpus: '${WEB_CPU_RESERVATION:-0.10}'
+          memory: ${WEB_MEM_RESERVATION:-64M}
+    mem_limit: ${WEB_MEM_LIMIT:-256M}
+    cpus: ${WEB_CPU_LIMIT:-0.5}
+    networks:
+      - global-network
+
+  # ----------------------------------------------------------------------------
+  # 3. Queue Worker (Opsional - Di-comment sementara karena belum ada kebutuhan)
+  # ----------------------------------------------------------------------------
+  # queue:
+  #   container_name: e_budget_queue
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   command: ["php", "artisan", "queue:work", "--tries=3", "--sleep=3"]
+  #   env_file:
+  #     - .env.docker
+  #   volumes:
+  #     - .:/var/www/html
+  #   depends_on:
+  #     - app
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '${QUEUE_CPU_LIMIT:-0.5}'
+  #         memory: ${QUEUE_MEM_LIMIT:-512M}
+  #       reservations:
+  #         cpus: '${QUEUE_CPU_RESERVATION:-0.10}'
+  #         memory: ${QUEUE_MEM_RESERVATION:-128M}
+  #   mem_limit: ${QUEUE_MEM_LIMIT:-512M}
+  #   cpus: ${QUEUE_CPU_LIMIT:-0.5}
+  #   networks:
+  #     - global-network
+
+# ------------------------------------------------------------------------------
+# External Network (menggunakan network global yang sudah ada)
+# ------------------------------------------------------------------------------
+networks:
+  global-network:
+    external: true

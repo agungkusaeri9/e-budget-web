@@ -1,17 +1,24 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\BudgetPlanController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RecurringExpenseController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::inertia('/', 'Welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
+    Route::resource('categories', CategoryController::class)->except(['show']);
+    Route::patch('recurring-expenses/{recurring_expense}/toggle', [RecurringExpenseController::class, 'toggle'])->name('recurring-expenses.toggle');
+    Route::resource('recurring-expenses', RecurringExpenseController::class)->except(['show']);
+    Route::resource('budget-plans', BudgetPlanController::class);
     Route::get('activity', [ActivityLogController::class, 'index'])->name('activity.index');
 
     Route::middleware(['role:super admin'])->group(function () {
@@ -20,4 +27,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

@@ -4,6 +4,9 @@ import {
     Database,
     LayoutGrid,
     User,
+    Tags,
+    WalletCards,
+    CalendarClock,
     History,
     ShieldCheck,
 } from 'lucide-vue-next';
@@ -29,6 +32,16 @@ const mainNavItems = computed<NavItem[]>(() => [
         icon: LayoutGrid,
     },
     {
+        title: 'Budget Plan',
+        href: '/budget-plans',
+        icon: WalletCards,
+    },
+    {
+        title: 'Pengeluaran Rutin',
+        href: '/recurring-expenses',
+        icon: CalendarClock,
+    },
+    {
         title: 'Data Master',
         href: '#',
         icon: Database,
@@ -37,6 +50,11 @@ const mainNavItems = computed<NavItem[]>(() => [
                 title: 'Pengguna',
                 href: '/users',
                 icon: User,
+            },
+            {
+                title: 'Kategori',
+                href: '/categories',
+                icon: Tags,
             },
         ],
     },

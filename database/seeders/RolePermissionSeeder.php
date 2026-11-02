@@ -6,13 +6,14 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
         // Reset cached roles and permissions
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create permissions
         $permissions = [
@@ -20,6 +21,14 @@ class RolePermissionSeeder extends Seeder
             'create users',
             'edit users',
             'delete users',
+            'view categories',
+            'create categories',
+            'edit categories',
+            'delete categories',
+            'view budget plans',
+            'create budget plans',
+            'edit budget plans',
+            'delete budget plans',
             'view roles',
             'create roles',
             'edit roles',
@@ -41,6 +50,14 @@ class RolePermissionSeeder extends Seeder
             'view users',
             'create users',
             'edit users',
+            'view categories',
+            'create categories',
+            'edit categories',
+            'delete categories',
+            'view budget plans',
+            'create budget plans',
+            'edit budget plans',
+            'delete budget plans',
             'view activity logs',
         ]);
 

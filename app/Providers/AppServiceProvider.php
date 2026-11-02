@@ -3,11 +3,17 @@
 namespace App\Providers;
 
 use App\Repositories\Contracts\ActivityLogRepositoryInterface;
+use App\Repositories\Contracts\BudgetPlanRepositoryInterface;
+use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
+use App\Repositories\Contracts\RecurringExpenseRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\ActivityLogRepository;
+use App\Repositories\Eloquent\BudgetPlanRepository;
+use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\PermissionRepository;
+use App\Repositories\Eloquent\RecurringExpenseRepository;
 use App\Repositories\Eloquent\RoleRepository;
 use App\Repositories\Eloquent\UserRepository;
 use Carbon\CarbonImmutable;
@@ -27,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $this->app->bind(RecurringExpenseRepositoryInterface::class, RecurringExpenseRepository::class);
+        $this->app->bind(BudgetPlanRepositoryInterface::class, BudgetPlanRepository::class);
         $this->app->bind(ActivityLogRepositoryInterface::class, ActivityLogRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
         $this->app->bind(PermissionRepositoryInterface::class, PermissionRepository::class);
