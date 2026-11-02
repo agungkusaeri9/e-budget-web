@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 
@@ -47,6 +48,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::shouldBeStrict();
+
+        if (
+            $this->app->isProduction()
+            || str_starts_with((string) config('app.url'), 'https://')
+            || request()->header('X-Forwarded-Proto') === 'https'
+        ) {
+            URL::forceScheme('https');
+        }
 
         $this->configureDefaults();
 
