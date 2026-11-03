@@ -49,19 +49,28 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::shouldBeStrict();
 
-        if (
-            $this->app->isProduction()
-            || str_starts_with((string) config('app.url'), 'https://')
-            || request()->header('X-Forwarded-Proto') === 'https'
-        ) {
-            URL::forceScheme('https');
-        }
+        $this->configureUrls();
 
         $this->configureDefaults();
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super admin') ? true : null;
         });
+    }
+
+    /**
+     * Force generated URLs to use APP_URL when the app is served over HTTPS
+     * behind a reverse proxy. Plain HTTP deployments rely on the trusted
+     * proxy headers / request host instead.
+     */
+    protected function configureUrls(): void
+    {
+        $appUrl = rtrim((string) config('app.url'), '/');
+
+        if (str_starts_with($appUrl, 'https://')) {
+            URL::forceScheme('https');
+            URL::forceRootUrl($appUrl);
+        }
     }
 
     /**

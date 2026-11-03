@@ -8,5 +8,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 interface ActivityLogRepositoryInterface
 {
     public function getAllPaginated(array $filters, int $perPage): LengthAwarePaginator;
+
     public function create(array $data): ActivityLog;
 }

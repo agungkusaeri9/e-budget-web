@@ -18,6 +18,7 @@ RUN apk update && apk add --no-cache \
     oniguruma-dev \
     linux-headers \
     bash \
+    nano \
     nodejs \
     npm
 
