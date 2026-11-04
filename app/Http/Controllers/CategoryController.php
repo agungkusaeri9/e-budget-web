@@ -6,6 +6,7 @@ use App\Http\Requests\Category\IndexCategoryRequest;
 use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Models\Category;
+use App\Models\Saving;
 use App\Services\CategoryService;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -28,8 +29,11 @@ class CategoryController extends Controller
                 'amount' => $category->amount,
                 'description' => $category->description,
                 'is_default' => (bool) $category->is_default,
+                'is_saving' => (bool) $category->is_saving,
+                'saving_id' => $category->saving_id,
                 'order_no' => (int) $category->order_no,
                 'created_at' => $category->created_at,
+                'saving_name' => $category->savingAccount?->name,
             ]),
             'filters' => $request->filters(),
         ]);
@@ -37,7 +41,10 @@ class CategoryController extends Controller
 
     public function create()
     {
-        return Inertia::render('categories/Create');
+        return Inertia::render('categories/Create', [
+            'savings' => Saving::with('provider:id,name')->orderBy('name')->get(['id', 'name', 'saving_provider_id'])
+                ->map(fn ($s) => ['id' => $s->id, 'name' => $s->name, 'provider' => $s->provider?->name]),
+        ]);
     }
 
     public function store(StoreCategoryRequest $request)
@@ -58,6 +65,8 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         return Inertia::render('categories/Edit', [
+            'savings' => Saving::with('provider:id,name')->orderBy('name')->get(['id', 'name', 'saving_provider_id'])
+                ->map(fn ($s) => ['id' => $s->id, 'name' => $s->name, 'provider' => $s->provider?->name]),
             'category' => [
                 'id' => $category->id,
                 'name' => $category->name,
@@ -65,6 +74,8 @@ class CategoryController extends Controller
                 'amount' => $category->amount,
                 'description' => $category->description,
                 'is_default' => (bool) $category->is_default,
+                'is_saving' => (bool) $category->is_saving,
+                'saving_id' => $category->saving_id,
                 'order_no' => (int) $category->order_no,
             ],
         ]);

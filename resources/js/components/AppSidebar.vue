@@ -5,6 +5,8 @@ import {
     LayoutGrid,
     User,
     Tags,
+    PiggyBank,
+    Landmark,
     WalletCards,
     CalendarClock,
     History,
@@ -37,6 +39,11 @@ const mainNavItems = computed<NavItem[]>(() => [
         icon: WalletCards,
     },
     {
+        title: 'Tabungan',
+        href: '/savings',
+        icon: PiggyBank,
+    },
+    {
         title: 'Pengeluaran Rutin',
         href: '/recurring-expenses',
         icon: CalendarClock,
@@ -55,6 +62,11 @@ const mainNavItems = computed<NavItem[]>(() => [
                 title: 'Kategori',
                 href: '/categories',
                 icon: Tags,
+            },
+            {
+                title: 'Tempat Penyimpanan',
+                href: '/saving-providers',
+                icon: Landmark,
             },
         ],
     },

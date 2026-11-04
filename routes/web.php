@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RecurringExpenseController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SavingController;
+use App\Http\Controllers\SavingProviderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +22,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class)->except(['show']);
+    Route::resource('saving-providers', SavingProviderController::class)->except(['show']);
+    Route::post('savings/{saving}/transactions', [SavingController::class, 'adjust'])->name('savings.transactions.store');
+    Route::delete('savings/{saving}/transactions/{transaction}', [SavingController::class, 'destroyTransaction'])->scopeBindings()->name('savings.transactions.destroy');
+    Route::resource('savings', SavingController::class);
     Route::patch('recurring-expenses/{recurring_expense}/toggle', [RecurringExpenseController::class, 'toggle'])->name('recurring-expenses.toggle');
     Route::resource('recurring-expenses', RecurringExpenseController::class)->except(['show']);
     Route::resource('budget-plans', BudgetPlanController::class);

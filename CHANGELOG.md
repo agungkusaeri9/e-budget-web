@@ -6,6 +6,42 @@ Format pencatatan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/
 
 ---
 
+## [1.0.0] - 2026-11-04
+
+Rilis penuh e-Budget: perencanaan anggaran bulanan, pengeluaran rutin, tabungan beserta master tempat penyimpanan, dashboard analitik interaktif, dan dukungan deployment Docker.
+
+### ✨ Fitur Utama (Features)
+
+- **Manajemen Tabungan (Savings)**:
+  - Pengelolaan tabungan (nama, tempat penyimpanan, target nominal opsional, tenggat opsional, dan catatan).
+  - Kolom kalkulasi otomatis **Kekurangan Target** (`Target - Saldo` atau status `Tercapai`).
+  - Kartu ringkasan saldo otomatis per tempat penyimpanan beserta total saldo keseluruhan.
+  - Halaman detail 3 kolom (Uang Masuk, Uang Keluar, Ringkasan + Form Penyesuaian Saldo manual tambah/kurang).
+  - Integrasi otomatis dengan Budget Plan: kategori pengeluaran bertanda **Termasuk Tabungan** otomatis membuat/memperbarui transaksi tabungan saat Budget Plan berstatus `active` atau `closed`.
+
+- **Master Tempat Penyimpanan (Saving Providers CRUD)**:
+  - Pengelolaan tempat penyimpanan tabungan (Bank Mandiri, BCA, Bibit, dll.) dengan nomor rekening/akun, atas nama, dan deskripsi bersifat opsional.
+
+- **Perencanaan Anggaran (Budget Plans)**:
+  - Pembuatan rencana anggaran bulanan (Draft, Aktif, Selesai) dengan item pemasukan, lembur, dan alokasi pengeluaran bulan berikutnya.
+  - Pengisian otomatis dari kategori default dan pengeluaran rutin yang aktif pada periode terkait.
+
+- **Pengeluaran Rutin (Recurring Expenses)**:
+  - Pencatatan pengeluaran berulang/cicilan dengan durasi tenor, tanggal mulai, dan toggle aktif/nonaktif.
+
+- **Manajemen Kategori (Categories CRUD)**:
+  - Pengelolaan kategori pemasukan dan pengeluaran dengan nominal default, nomor urut, flag default Budget Plan, serta pengaturan integrasi ke Tabungan.
+
+- **Dashboard Analitik**:
+  - Ringkasan anggaran aktif, rasio pengeluaran, rincian pemasukan/pengeluaran, dan grafik tren bulanan dalam satu tahun.
+
+### 🐛 Perbaikan & Infrastruktur
+
+- Konfigurasi Dockerfile dan penanganan URL/asset di belakang reverse proxy.
+- Penghapusan halaman welcome publik; rute utama langsung mengarah ke login/dashboard.
+
+---
+
 ## [0.1.0] - 2026-10-03
 
 Rilis awal sistem manajemen pengguna, peran, hak akses, dan log aktivitas dengan antarmuka DataTable modern serta arsitektur backend Service-Repository.

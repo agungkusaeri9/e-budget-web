@@ -12,6 +12,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function getAllPaginated(array $filters, int $perPage): LengthAwarePaginator
     {
         return Category::query()
+            ->with('savingAccount:id,name')
             ->when($filters['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")

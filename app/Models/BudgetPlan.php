@@ -51,4 +51,9 @@ class BudgetPlan extends Model
     {
         return $this->hasMany(BudgetPlanItem::class);
     }
+
+    public function savingTransactions(): HasMany
+    {
+        return $this->hasMany(SavingTransaction::class);
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\BudgetPlan;
 use App\Models\Category;
 use App\Repositories\Contracts\BudgetPlanRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BudgetPlanService
@@ -216,6 +217,8 @@ class BudgetPlanService
                 ]);
             }
 
+            $this->syncSavingTransactions($budgetPlan, $status);
+
             $this->activityLogService->log(
                 'Create Budget Plan',
                 "Created a new budget plan for {$budgetPlan->month}/{$budgetPlan->year}",
@@ -278,6 +281,8 @@ class BudgetPlanService
                 ]);
             }
 
+            $this->syncSavingTransactions($existingPlan, $status);
+
             $this->activityLogService->log(
                 'Update Budget Plan',
                 "Updated budget plan for {$existingPlan->month}/{$existingPlan->year}",
@@ -316,6 +321,26 @@ class BudgetPlanService
 
             return true;
         });
+    }
+
+    private function syncSavingTransactions(BudgetPlan $plan, string $status): void
+    {
+        $plan->savingTransactions()->delete();
+
+        if ($status === 'draft') {
+            return;
+        }
+
+        $date = Carbon::create((int) $plan->year, (int) $plan->month, 1)->toDateString();
+
+        $plan->items()->with('category')->where('type', 'expense')->where('amount', '>', 0)->get()
+            ->filter(fn ($item) => $item->category?->is_saving && $item->category->saving_id)
+            ->each(fn ($item) => $plan->savingTransactions()->create([
+                'saving_id' => $item->category->saving_id,
+                'amount' => $item->amount,
+                'transaction_date' => $date,
+                'note' => "Budget plan {$plan->month}/{$plan->year}: {$item->name}",
+            ]));
     }
 
     /**

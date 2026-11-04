@@ -43,6 +43,8 @@ interface Category {
     amount: string | number | null;
     description: string | null;
     is_default: boolean;
+    is_saving: boolean;
+    saving_name: string | null;
     order_no: number;
     created_at: string;
 }
@@ -354,6 +356,13 @@ const perPageOptions = ['10', '20', '30', '40', '50', '100'];
                                     class="text-[11px] font-medium"
                                 >
                                     Pengeluaran
+                                </Badge>
+                                <Badge
+                                    v-if="category.is_saving"
+                                    variant="secondary"
+                                    class="ml-1 text-[11px] font-medium"
+                                >
+                                    Tabungan: {{ category.saving_name }}
                                 </Badge>
                             </td>
                             <td

@@ -6,8 +6,9 @@ use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'type', 'amount', 'description', 'is_default', 'order_no'])]
+#[Fillable(['name', 'type', 'amount', 'description', 'is_default', 'is_saving', 'saving_id', 'order_no'])]
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
@@ -20,6 +21,7 @@ class Category extends Model
      */
     protected $attributes = [
         'is_default' => false,
+        'is_saving' => false,
         'order_no' => 0,
     ];
 
@@ -33,7 +35,13 @@ class Category extends Model
         return [
             'amount' => 'decimal:2',
             'is_default' => 'boolean',
+            'is_saving' => 'boolean',
             'order_no' => 'integer',
         ];
+    }
+
+    public function savingAccount(): BelongsTo
+    {
+        return $this->belongsTo(Saving::class, 'saving_id');
     }
 }

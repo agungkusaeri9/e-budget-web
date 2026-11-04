@@ -21,6 +21,10 @@ import {
 } from '@/components/ui/select';
 import type { BreadcrumbItem } from '@/types';
 
+defineProps<{
+    savings: { id: number; name: string; provider: string | null }[];
+}>();
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Data Master', href: '#' },
@@ -34,6 +38,8 @@ const form = useForm({
     amount: '' as string | number,
     description: '',
     is_default: false,
+    is_saving: false,
+    saving_id: null as number | null,
     order_no: 0,
 });
 
@@ -182,6 +188,59 @@ const submit = () => {
                                 Jika dicentang, kategori ini otomatis muncul di
                                 tabel pemasukan/pengeluaran saat membuat Budget
                                 Plan baru.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="form.type === 'expense'"
+                        class="grid gap-4 rounded-lg border bg-muted/30 p-4"
+                    >
+                        <div class="flex items-start space-x-3">
+                            <input
+                                id="is_saving"
+                                v-model="form.is_saving"
+                                type="checkbox"
+                                class="mt-0.5 size-4 rounded border-gray-300 text-primary focus:ring-primary"
+                            />
+                            <div class="grid gap-1 leading-none">
+                                <label
+                                    for="is_saving"
+                                    class="cursor-pointer text-sm font-medium"
+                                >
+                                    Termasuk Tabungan
+                                </label>
+                                <p class="text-xs text-muted-foreground">
+                                    Nominal kategori ini pada Budget Plan
+                                    (aktif/closed) otomatis menambah saldo
+                                    tabungan terpilih.
+                                </p>
+                            </div>
+                        </div>
+                        <div v-if="form.is_saving" class="grid gap-2">
+                            <Label for="saving_id">Tabungan</Label>
+                            <select
+                                id="saving_id"
+                                v-model="form.saving_id"
+                                class="h-9 rounded-md border border-input bg-transparent px-3 text-sm"
+                            >
+                                <option :value="null" disabled>
+                                    Pilih tabungan
+                                </option>
+                                <option
+                                    v-for="s in savings"
+                                    :key="s.id"
+                                    :value="s.id"
+                                >
+                                    {{ s.name
+                                    }}{{ s.provider ? ` (${s.provider})` : '' }}
+                                </option>
+                            </select>
+                            <p
+                                v-if="form.errors.saving_id"
+                                class="text-xs text-destructive"
+                            >
+                                {{ form.errors.saving_id }}
                             </p>
                         </div>
                     </div>
