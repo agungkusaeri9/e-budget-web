@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\BudgetPlan;
 
+use App\Models\BudgetPlan;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class UpdateBudgetPlanRequest extends FormRequest
 {
@@ -33,6 +35,30 @@ class UpdateBudgetPlanRequest extends FormRequest
             'items.*.type' => ['required', 'string', 'in:income,expense'],
             'items.*.amount' => ['nullable', 'numeric', 'min:0'],
             'items.*.description' => ['nullable', 'string'],
+        ];
+    }
+
+    public function after(): array
+    {
+        return [
+            function (Validator $validator) {
+                if ($validator->errors()->isNotEmpty()) {
+                    return;
+                }
+
+                $routePlan = $this->route('budget_plan');
+                $ignoreId = $routePlan instanceof BudgetPlan ? $routePlan->id : (int) $routePlan;
+
+                $exists = BudgetPlan::query()
+                    ->where('month', (int) $this->input('month'))
+                    ->where('year', (int) $this->input('year'))
+                    ->where('id', '!=', $ignoreId)
+                    ->exists();
+
+                if ($exists) {
+                    $validator->errors()->add('month', 'Budget Plan untuk bulan dan tahun tersebut sudah ada.');
+                }
+            },
         ];
     }
 

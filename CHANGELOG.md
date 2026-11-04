@@ -24,7 +24,10 @@ Rilis penuh e-Budget: perencanaan anggaran bulanan, pengeluaran rutin, tabungan 
 
 - **Perencanaan Anggaran (Budget Plans)**:
   - Pembuatan rencana anggaran bulanan (Draft, Aktif, Selesai) dengan item pemasukan, lembur, dan alokasi pengeluaran bulan berikutnya.
+  - Validasi pencegahan duplikasi periode bulan dan tahun yang sama.
   - Pengisian otomatis dari kategori default dan pengeluaran rutin yang aktif pada periode terkait.
+  - Antarmuka Create, Edit, dan Detail 2 kolom (kolom kiri Periode & Ringkasan *sticky*, kolom kanan tab **Pemasukan** & **Pengeluaran** dengan tabel *scrollable*).
+  - Modal tambah baris dengan pencarian kategori dan input nominal (kategori pemasukan dapat dipilih berulang, kategori pengeluaran unik per baris).
 
 - **Pengeluaran Rutin (Recurring Expenses)**:
   - Pencatatan pengeluaran berulang/cicilan dengan durasi tenor, tanggal mulai, dan toggle aktif/nonaktif.

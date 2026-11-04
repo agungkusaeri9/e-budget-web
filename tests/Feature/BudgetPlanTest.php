@@ -211,4 +211,25 @@ class BudgetPlanTest extends TestCase
         $this->assertEquals('draft', $planB->fresh()->status);
         $this->assertEquals(0, BudgetPlan::where('status', 'active')->count());
     }
+
+    public function test_budget_plan_cannot_have_duplicate_month_and_year(): void
+    {
+        $user = User::factory()->create();
+        $planA = BudgetPlan::factory()->create(['month' => 3, 'year' => 2026]);
+        $planB = BudgetPlan::factory()->create(['month' => 4, 'year' => 2026]);
+
+        $this->actingAs($user)->post(route('budget-plans.store'), [
+            'month' => 3,
+            'year' => 2026,
+            'status' => 'draft',
+            'items' => [],
+        ])->assertSessionHasErrors('month');
+
+        $this->actingAs($user)->put(route('budget-plans.update', $planB), [
+            'month' => 3,
+            'year' => 2026,
+            'status' => 'draft',
+            'items' => [],
+        ])->assertSessionHasErrors('month');
+    }
 }
