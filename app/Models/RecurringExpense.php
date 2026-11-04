@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Database\Factories\RecurringExpenseFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 
 #[Fillable([
+    'user_id',
     'category_id',
     'name',
     'amount',
@@ -23,7 +25,7 @@ use Illuminate\Support\Collection;
 class RecurringExpense extends Model
 {
     /** @use HasFactory<RecurringExpenseFactory> */
-    use HasFactory;
+    use BelongsToUser, HasFactory;
 
     /**
      * The model's default values for attributes.

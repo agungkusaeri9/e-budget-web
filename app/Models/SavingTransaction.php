@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['saving_id', 'budget_plan_id', 'amount', 'transaction_date', 'note'])]
+#[Fillable(['user_id', 'saving_id', 'budget_plan_id', 'amount', 'transaction_date', 'note'])]
 class SavingTransaction extends Model
 {
+    use BelongsToUser;
+
     protected function casts(): array
     {
         return [

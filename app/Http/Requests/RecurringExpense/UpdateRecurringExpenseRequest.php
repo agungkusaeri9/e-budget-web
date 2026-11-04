@@ -4,6 +4,7 @@ namespace App\Http\Requests\RecurringExpense;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class UpdateRecurringExpenseRequest extends FormRequest
@@ -34,7 +35,7 @@ class UpdateRecurringExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => ['nullable', 'required_without:category_name', 'integer', 'exists:categories,id'],
+            'category_id' => ['nullable', 'required_without:category_name', 'integer', auth()->check() ? Rule::exists('categories', 'id')->where('user_id', auth()->id()) : 'exists:categories,id'],
             'category_name' => ['nullable', 'required_without:category_id', 'string', 'max:255'],
             'name' => ['nullable', 'string', 'max:255'],
             'amount' => ['required', 'numeric', 'min:0'],

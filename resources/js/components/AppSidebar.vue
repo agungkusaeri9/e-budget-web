@@ -16,6 +16,7 @@ import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
+import { usePermission } from '@/composables/usePermission';
 import {
     Sidebar,
     SidebarContent,
@@ -27,70 +28,100 @@ import {
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
 
-const mainNavItems = computed<NavItem[]>(() => [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Budget Plan',
-        href: '/budget-plans',
-        icon: WalletCards,
-    },
-    {
-        title: 'Tabungan',
-        href: '/savings',
-        icon: PiggyBank,
-    },
-    {
-        title: 'Pengeluaran Rutin',
-        href: '/recurring-expenses',
-        icon: CalendarClock,
-    },
-    {
-        title: 'Data Master',
-        href: '#',
-        icon: Database,
-        items: [
-            {
-                title: 'Pengguna',
-                href: '/users',
-                icon: User,
-            },
-            {
-                title: 'Kategori',
-                href: '/categories',
-                icon: Tags,
-            },
-            {
-                title: 'Tempat Penyimpanan',
-                href: '/saving-providers',
-                icon: Landmark,
-            },
-        ],
-    },
-    {
-        title: 'Peran & Hak Akses',
-        href: '#',
-        icon: ShieldCheck,
-        items: [
-            {
-                title: 'Peran (Roles)',
-                href: '/roles',
-            },
-            {
-                title: 'Hak Akses (Permissions)',
-                href: '/permissions',
-            },
-        ],
-    },
-    {
-        title: 'Log Aktivitas',
-        href: '/activity',
-        icon: History,
-    },
-]);
+const { can } = usePermission();
+
+const mainNavItems = computed<NavItem[]>(() => {
+    const raw: (NavItem & {
+        permission?: string;
+        items?: (NavItem & { permission?: string })[];
+    })[] = [
+        {
+            title: 'Dashboard',
+            href: '/dashboard',
+            icon: LayoutGrid,
+        },
+        {
+            title: 'Budget Plan',
+            href: '/budget-plans',
+            icon: WalletCards,
+            permission: 'view budget plans',
+        },
+        {
+            title: 'Tabungan',
+            href: '/savings',
+            icon: PiggyBank,
+            permission: 'view savings',
+        },
+        {
+            title: 'Pengeluaran Rutin',
+            href: '/recurring-expenses',
+            icon: CalendarClock,
+            permission: 'view recurring expenses',
+        },
+        {
+            title: 'Kategori Anggaran',
+            href: '/categories',
+            icon: Tags,
+            permission: 'view categories',
+        },
+        {
+            title: 'Data Master',
+            href: '#',
+            icon: Database,
+            items: [
+                {
+                    title: 'Pengguna',
+                    href: '/users',
+                    icon: User,
+                    permission: 'view users',
+                },
+            ],
+        },
+        {
+            title: 'Peran & Hak Akses',
+            href: '#',
+            icon: ShieldCheck,
+            items: [
+                {
+                    title: 'Peran (Roles)',
+                    href: '/roles',
+                    permission: 'view roles',
+                },
+                {
+                    title: 'Hak Akses (Permissions)',
+                    href: '/permissions',
+                    permission: 'view permissions',
+                },
+            ],
+        },
+        {
+            title: 'Log Aktivitas',
+            href: '/activity',
+            icon: History,
+            permission: 'view activity logs',
+        },
+        {
+            title: 'Rekening & Dompet',
+            href: '/saving-providers',
+            icon: Landmark,
+            permission: 'view saving providers',
+        },
+    ];
+
+    return raw
+        .map((item) => {
+            if (item.items) {
+                const visibleChildren = item.items.filter((child) =>
+                    can(child.permission),
+                );
+                return visibleChildren.length > 0
+                    ? { ...item, items: visibleChildren }
+                    : null;
+            }
+            return can(item.permission) ? item : null;
+        })
+        .filter((item): item is NavItem => item !== null);
+});
 </script>
 
 <template>

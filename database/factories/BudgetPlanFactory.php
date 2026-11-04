@@ -23,7 +23,7 @@ class BudgetPlanFactory extends Factory
         $totalExpense = fake()->numberBetween(2000000, 8000000);
 
         return [
-            'user_id' => User::factory(),
+            'user_id' => fn () => auth()->id() ?? User::query()->latest('id')->value('id') ?? User::factory(),
             'month' => fake()->numberBetween(1, 12),
             'year' => (int) date('Y'),
             'status' => fake()->randomElement(['draft', 'active', 'closed']),

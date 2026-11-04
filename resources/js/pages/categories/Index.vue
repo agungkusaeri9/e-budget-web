@@ -15,6 +15,7 @@ import {
 } from 'lucide-vue-next';
 import { ref, watch, reactive } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { usePermission } from '@/composables/usePermission';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -67,11 +68,11 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const { can } = usePermission();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Data Master', href: '#' },
-    { title: 'Manajemen Kategori', href: '/categories' },
+    { title: 'Kategori Anggaran', href: '/categories' },
 ];
 
 const filterState = reactive({
@@ -151,7 +152,7 @@ const perPageOptions = ['10', '20', '30', '40', '50', '100'];
 
 <template>
     <div class="flex h-full flex-1 flex-col gap-6 p-4 md:p-6">
-        <Head title="Manajemen Kategori" />
+        <Head title="Kategori Anggaran" />
 
         <!-- Breadcrumbs in Content -->
         <Breadcrumbs :breadcrumbs="breadcrumbs" />
@@ -165,11 +166,11 @@ const perPageOptions = ['10', '20', '30', '40', '50', '100'];
                     <h1
                         class="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
                     >
-                        Manajemen Kategori
+                        Kategori Anggaran
                     </h1>
                 </div>
                 <p class="text-sm text-muted-foreground">
-                    Kelola kategori pemasukan dan pengeluaran beserta nominal
+                    Kelola kategori pemasukan dan pengeluaran anggaran bulanan beserta nominal
                     default dan deskripsinya.
                 </p>
             </div>
@@ -407,6 +408,7 @@ const perPageOptions = ['10', '20', '30', '40', '50', '100'];
                             <td class="p-3.5 text-right align-middle">
                                 <div class="flex justify-end gap-1">
                                     <Button
+                                        v-if="can('edit categories')"
                                         variant="ghost"
                                         size="icon"
                                         class="h-8 w-8 text-muted-foreground hover:text-foreground"
@@ -420,6 +422,7 @@ const perPageOptions = ['10', '20', '30', '40', '50', '100'];
                                         </Link>
                                     </Button>
                                     <Button
+                                        v-if="can('delete categories')"
                                         variant="ghost"
                                         size="icon"
                                         class="h-8 w-8 text-muted-foreground hover:text-destructive"

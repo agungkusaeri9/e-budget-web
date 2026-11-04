@@ -15,6 +15,7 @@ import {
 } from 'lucide-vue-next';
 import { reactive, ref, watch } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { usePermission } from '@/composables/usePermission';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -73,6 +74,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const { can } = usePermission();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -153,7 +155,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                 </p>
             </div>
 
-            <Button as-child class="shrink-0">
+            <Button v-if="can('create savings')" as-child class="shrink-0">
                 <Link href="/savings/create">
                     <Plus class="mr-2 h-4 w-4" />
                     Tambah Tabungan
@@ -281,7 +283,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                             <th
                                 class="h-10 px-4 text-left align-middle text-xs font-semibold tracking-wider text-muted-foreground uppercase"
                             >
-                                Disimpan di
+                                Rekening / Dompet
                             </th>
                             <th
                                 class="h-10 px-4 text-right align-middle text-xs font-semibold tracking-wider text-muted-foreground uppercase"
@@ -420,6 +422,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                                         </Link>
                                     </Button>
                                     <Button
+                                        v-if="can('edit savings')"
                                         variant="ghost"
                                         size="icon"
                                         class="h-8 w-8 text-muted-foreground hover:text-foreground"
@@ -433,6 +436,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                                         </Link>
                                     </Button>
                                     <Button
+                                        v-if="can('delete savings')"
                                         variant="ghost"
                                         size="icon"
                                         class="h-8 w-8 text-muted-foreground hover:text-destructive"

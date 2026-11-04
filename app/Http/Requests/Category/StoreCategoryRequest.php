@@ -4,6 +4,7 @@ namespace App\Http\Requests\Category;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -48,7 +49,7 @@ class StoreCategoryRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'is_default' => ['nullable', 'boolean'],
             'is_saving' => ['boolean'],
-            'saving_id' => ['nullable', 'required_if:is_saving,true', 'integer', 'exists:savings,id'],
+            'saving_id' => ['nullable', 'required_if:is_saving,true', 'integer', auth()->check() ? Rule::exists('savings', 'id')->where('user_id', auth()->id()) : 'exists:savings,id'],
             'order_no' => ['nullable', 'integer', 'min:0'],
         ];
     }

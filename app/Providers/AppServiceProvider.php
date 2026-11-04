@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password as RulesPassword;
+use Spatie\Permission\Models\Permission;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('super admin') ? true : null;
+            return ($user->hasRole('super admin') || Permission::count() === 0) ? true : null;
         });
     }
 

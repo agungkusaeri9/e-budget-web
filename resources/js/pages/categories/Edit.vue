@@ -40,8 +40,7 @@ const props = defineProps<{
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Data Master', href: '#' },
-    { title: 'Manajemen Kategori', href: '/categories' },
+    { title: 'Kategori Anggaran', href: '/categories' },
     { title: `Edit Kategori: ${props.category.name}`, href: '#' },
 ];
 

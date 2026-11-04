@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'type', 'amount', 'description', 'is_default', 'is_saving', 'saving_id', 'order_no'])]
+#[Fillable(['user_id', 'name', 'type', 'amount', 'description', 'is_default', 'is_saving', 'saving_id', 'order_no'])]
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
-    use HasFactory;
+    use BelongsToUser, HasFactory;
 
     /**
      * The model's default values for attributes.

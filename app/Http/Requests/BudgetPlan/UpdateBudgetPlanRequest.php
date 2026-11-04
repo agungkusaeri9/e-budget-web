@@ -5,6 +5,7 @@ namespace App\Http\Requests\BudgetPlan;
 use App\Models\BudgetPlan;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class UpdateBudgetPlanRequest extends FormRequest
@@ -30,7 +31,7 @@ class UpdateBudgetPlanRequest extends FormRequest
             'status' => ['required', 'string', 'in:draft,active,closed'],
             'notes' => ['nullable', 'string'],
             'items' => ['nullable', 'array'],
-            'items.*.category_id' => ['nullable', 'integer', 'exists:categories,id'],
+            'items.*.category_id' => ['nullable', 'integer', auth()->check() ? Rule::exists('categories', 'id')->where('user_id', auth()->id()) : 'exists:categories,id'],
             'items.*.name' => ['required', 'string', 'max:255'],
             'items.*.type' => ['required', 'string', 'in:income,expense'],
             'items.*.amount' => ['nullable', 'numeric', 'min:0'],

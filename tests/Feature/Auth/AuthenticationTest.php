@@ -82,7 +82,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        RateLimiter::increment(Str::transliterate(Str::lower($user->username).'|127.0.0.1'), amount: 5);
+        RateLimiter::increment(md5('login'.Str::transliterate(Str::lower($user->username).'|127.0.0.1')), amount: 5);
 
         $response = $this->post(route('login.store'), [
             'username' => $user->username,

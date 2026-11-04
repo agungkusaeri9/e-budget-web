@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'saving_provider_id', 'target_amount', 'deadline', 'notes'])]
+#[Fillable(['user_id', 'name', 'saving_provider_id', 'target_amount', 'deadline', 'notes'])]
 class Saving extends Model
 {
-    use HasFactory;
+    use BelongsToUser, HasFactory;
 
     protected function casts(): array
     {

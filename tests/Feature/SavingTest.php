@@ -74,4 +74,25 @@ class SavingTest extends TestCase
         $this->actingAs($user)->post(route('categories.store'), ['name' => 'X', 'type' => 'expense', 'is_saving' => true])
             ->assertSessionHasErrors('saving_id');
     }
+
+    public function test_data_is_isolated_per_user(): void
+    {
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+
+        $this->actingAs($userA)->post(route('categories.store'), ['name' => 'Cat A', 'type' => 'expense']);
+        $this->actingAs($userA)->post(route('savings.store'), ['name' => 'Tabungan A']);
+        $catA = Category::first();
+        $savingA = Saving::first();
+
+        $this->actingAs($userB);
+        $this->assertSame(0, Category::count());
+        $this->assertSame(0, Saving::count());
+
+        $this->get(route('savings.show', $savingA->id))->assertNotFound();
+        $this->patch(route('categories.update', $catA->id), ['name' => 'Hack', 'type' => 'expense'])->assertNotFound();
+        $this->delete(route('categories.destroy', $catA->id))->assertNotFound();
+        $this->post(route('categories.store'), ['name' => 'Cat B', 'type' => 'expense', 'is_saving' => true, 'saving_id' => $savingA->id])
+            ->assertSessionHasErrors('saving_id');
+    }
 }

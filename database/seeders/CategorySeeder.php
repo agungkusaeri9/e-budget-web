@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -237,9 +238,12 @@ class CategorySeeder extends Seeder
             ],
         ];
 
+        $userId = auth()->id() ?? User::query()->min('id');
+
         foreach ($categories as $index => $category) {
-            Category::updateOrCreate(
+            Category::withoutGlobalScopes()->updateOrCreate(
                 [
+                    'user_id' => $userId,
                     'name' => $category['name'],
                     'type' => $category['type'],
                 ],

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Category;
 use App\Models\RecurringExpense;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,7 @@ class RecurringExpenseFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => fn () => auth()->id() ?? User::query()->latest('id')->value('id') ?? User::factory(),
             'category_id' => Category::factory()->state(['type' => 'expense']),
             'name' => $this->faker->words(2, true),
             'amount' => $this->faker->numberBetween(100, 2000) * 1000,

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SavingRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class SavingRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'saving_provider_id' => ['nullable', 'integer', 'exists:saving_providers,id'],
+            'saving_provider_id' => ['nullable', 'integer', auth()->check() ? Rule::exists('saving_providers', 'id')->where('user_id', auth()->id()) : 'exists:saving_providers,id'],
             'target_amount' => ['nullable', 'numeric', 'min:0'],
             'deadline' => ['nullable', 'date'],
             'notes' => ['nullable', 'string'],

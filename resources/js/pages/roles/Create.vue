@@ -78,25 +78,41 @@ const submit = () => {
                     </div>
 
                     <div class="grid gap-4">
-                        <Label>Hak Akses / Permissions</Label>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border rounded-lg p-4 bg-muted/30">
-                            <div
+                        <div class="flex items-center justify-between">
+                            <Label>Hak Akses / Permissions ({{ form.permissions.length }} dipilih)</Label>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                class="h-7 text-xs"
+                                @click="
+                                    form.permissions =
+                                        form.permissions.length === permissions.length
+                                            ? []
+                                            : permissions.map((p) => p.name)
+                                "
+                            >
+                                {{ form.permissions.length === permissions.length ? 'Hapus Semua' : 'Pilih Semua' }}
+                            </Button>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3 rounded-lg border bg-muted/30 p-4 md:grid-cols-3">
+                            <label
                                 v-for="perm in permissions"
                                 :key="perm.id"
-                                class="flex items-center space-x-2"
+                                :for="`perm-${perm.id}`"
+                                class="flex cursor-pointer items-center space-x-2.5 rounded-md border bg-background p-2.5 transition-colors hover:bg-muted/50"
                             >
-                                <Checkbox
+                                <input
                                     :id="`perm-${perm.id}`"
-                                    :checked="form.permissions.includes(perm.name)"
-                                    @update:checked="togglePermission(perm.name)"
+                                    v-model="form.permissions"
+                                    type="checkbox"
+                                    :value="perm.name"
+                                    class="size-4 rounded border-gray-300 text-primary focus:ring-primary"
                                 />
-                                <label
-                                    :for="`perm-${perm.id}`"
-                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                                >
+                                <span class="text-xs font-medium leading-none">
                                     {{ perm.name }}
-                                </label>
-                            </div>
+                                </span>
+                            </label>
                         </div>
                         <p v-if="form.errors.permissions" class="text-xs text-destructive">{{ form.errors.permissions }}</p>
                     </div>

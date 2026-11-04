@@ -44,6 +44,10 @@ class SavingProviderController extends Controller
         $provider = SavingProvider::create($request->validated());
         $this->activityLogService->log('Create Saving Provider', "Created: {$provider->name}", ['saving_provider_id' => $provider->id]);
 
+        if ($request->boolean('from_modal')) {
+            return back()->with('success', 'Tempat penyimpanan berhasil ditambahkan.');
+        }
+
         return redirect()->route('saving-providers.index')->with('success', 'Tempat penyimpanan berhasil ditambahkan.');
     }
 

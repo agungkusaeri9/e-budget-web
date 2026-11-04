@@ -13,6 +13,7 @@ import {
 } from 'lucide-vue-next';
 import { reactive, ref, watch } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { usePermission } from '@/composables/usePermission';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -58,11 +59,11 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const { can } = usePermission();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Data Master', href: '#' },
-    { title: 'Tempat Penyimpanan', href: '/saving-providers' },
+    { title: 'Rekening & Dompet', href: '/saving-providers' },
 ];
 
 const filterState = reactive({
@@ -111,7 +112,7 @@ const perPageOptions = ['10', '20', '30', '50'];
 
 <template>
     <div class="flex h-full flex-1 flex-col gap-6 p-4 md:p-6">
-        <Head title="Tempat Penyimpanan" />
+        <Head title="Rekening & Dompet" />
 
         <Breadcrumbs :breadcrumbs="breadcrumbs" />
 
@@ -123,18 +124,18 @@ const perPageOptions = ['10', '20', '30', '50'];
                 <h1
                     class="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
                 >
-                    Tempat Penyimpanan
+                    Rekening &amp; Dompet
                 </h1>
                 <p class="text-sm text-muted-foreground">
-                    Kelola master bank, e-wallet, atau platform investasi untuk
+                    Kelola daftar rekening bank, e-wallet, atau akun investasi untuk
                     penyimpanan tabungan.
                 </p>
             </div>
 
-            <Button as-child class="shrink-0">
+            <Button v-if="can('create saving providers')" as-child class="shrink-0">
                 <Link href="/saving-providers/create">
                     <Plus class="mr-2 h-4 w-4" />
-                    Tambah Tempat Penyimpanan
+                    Tambah Rekening / Dompet
                 </Link>
             </Button>
         </div>
@@ -277,6 +278,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                             <td class="p-3.5 text-right align-middle">
                                 <div class="flex justify-end gap-1">
                                     <Button
+                                        v-if="can('edit saving providers')"
                                         variant="ghost"
                                         size="icon"
                                         class="h-8 w-8 text-muted-foreground hover:text-foreground"
@@ -290,6 +292,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                                         </Link>
                                     </Button>
                                     <Button
+                                        v-if="can('delete saving providers')"
                                         variant="ghost"
                                         size="icon"
                                         class="h-8 w-8 text-muted-foreground hover:text-destructive"
@@ -310,10 +313,10 @@ const perPageOptions = ['10', '20', '30', '50'];
                                         <Landmark class="h-6 w-6" />
                                     </div>
                                     <p class="font-medium text-foreground">
-                                        Belum ada data tempat penyimpanan
+                                        Belum ada data rekening atau dompet
                                     </p>
                                     <p class="text-xs">
-                                        Klik tombol "Tambah Tempat Penyimpanan"
+                                        Klik tombol "Tambah Rekening / Dompet"
                                         untuk menambahkan bank, e-wallet, atau
                                         platform investasi.
                                     </p>

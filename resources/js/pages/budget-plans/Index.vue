@@ -12,6 +12,7 @@ import {
 } from 'lucide-vue-next';
 import { ref, watch, reactive } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { usePermission } from '@/composables/usePermission';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -64,6 +65,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const { can } = usePermission();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -184,7 +186,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                 </p>
             </div>
 
-            <Button as-child class="shrink-0">
+            <Button v-if="can('create budget plans')" as-child class="shrink-0">
                 <Link href="/budget-plans/create">
                     <Plus class="mr-2 h-4 w-4" />
                     Buat Budget Plan
@@ -382,6 +384,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                                         </Link>
                                     </Button>
                                     <Button
+                                        v-if="can('edit budget plans')"
                                         variant="ghost"
                                         size="icon"
                                         class="h-8 w-8 text-muted-foreground hover:text-foreground"
@@ -395,6 +398,7 @@ const perPageOptions = ['10', '20', '30', '50'];
                                         </Link>
                                     </Button>
                                     <Button
+                                        v-if="can('delete budget plans')"
                                         variant="ghost"
                                         size="icon"
                                         class="h-8 w-8 text-muted-foreground hover:text-destructive"

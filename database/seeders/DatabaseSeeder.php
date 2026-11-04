@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call([
             RolePermissionSeeder::class,
-            CategorySeeder::class,
         ]);
 
         $sa = User::factory()->create([
@@ -26,5 +25,9 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $sa->assignRole('super admin');
+
+        $this->call([
+            CategorySeeder::class,
+        ]);
     }
 }

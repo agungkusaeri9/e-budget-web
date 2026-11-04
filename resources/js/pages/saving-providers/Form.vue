@@ -27,8 +27,7 @@ const isEdit = !!props.provider;
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Data Master', href: '#' },
-    { title: 'Tempat Penyimpanan', href: '/saving-providers' },
+    { title: 'Rekening & Dompet', href: '/saving-providers' },
     {
         title: isEdit ? `Edit: ${props.provider!.name}` : 'Tambah',
         href: '#',
@@ -54,7 +53,7 @@ const submit = () =>
             :title="
                 isEdit
                     ? `Edit: ${provider!.name}`
-                    : 'Tambah Tempat Penyimpanan'
+                    : 'Tambah Rekening / Dompet'
             "
         />
 
@@ -65,13 +64,13 @@ const submit = () =>
                 {{
                     isEdit
                         ? `Edit: ${provider!.name}`
-                        : 'Tambah Tempat Penyimpanan Baru'
+                        : 'Tambah Rekening / Dompet Baru'
                 }}
             </h1>
             <p class="text-sm text-muted-foreground">
                 {{
                     isEdit
-                        ? 'Perbarui informasi tempat penyimpanan.'
+                        ? 'Perbarui informasi rekening atau dompet.'
                         : 'Tambahkan bank, e-wallet, atau platform investasi baru. No. rekening, atas nama, dan deskripsi bersifat opsional.'
                 }}
             </p>
@@ -79,9 +78,9 @@ const submit = () =>
 
         <Card class="w-full">
             <CardHeader>
-                <CardTitle>Informasi Tempat Penyimpanan</CardTitle>
+                <CardTitle>Informasi Rekening / Dompet</CardTitle>
                 <CardDescription>
-                    Masukkan nama tempat penyimpanan, nomor rekening, dan atas
+                    Masukkan nama rekening/dompet, nomor rekening, dan atas
                     nama pemilik akun.
                 </CardDescription>
             </CardHeader>
