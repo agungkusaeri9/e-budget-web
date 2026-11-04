@@ -217,8 +217,6 @@ class BudgetPlanService
                 ]);
             }
 
-            $this->syncSavingTransactions($budgetPlan, $status);
-
             $this->activityLogService->log(
                 'Create Budget Plan',
                 "Created a new budget plan for {$budgetPlan->month}/{$budgetPlan->year}",
@@ -242,9 +240,10 @@ class BudgetPlanService
                 throw new \Exception('Data rencana anggaran tidak ditemukan di sistem.');
             }
 
+            $previousStatus = $existingPlan->status;
             $items = $data['items'] ?? [];
             $totals = $this->calculateTotals($items);
-            $status = $data['status'] ?? $existingPlan->status;
+            $status = $data['status'] ?? $previousStatus;
 
             if ($status === 'active') {
                 $this->budgetPlanRepository->deactivateOtherActivePlans($existingPlan->id);
@@ -281,7 +280,7 @@ class BudgetPlanService
                 ]);
             }
 
-            $this->syncSavingTransactions($existingPlan, $status);
+            $this->syncSavingTransactions($existingPlan, $previousStatus, $status);
 
             $this->activityLogService->log(
                 'Update Budget Plan',
@@ -323,13 +322,19 @@ class BudgetPlanService
         });
     }
 
-    private function syncSavingTransactions(BudgetPlan $plan, string $status): void
+    private function syncSavingTransactions(BudgetPlan $plan, string $previousStatus, string $status): void
     {
-        $plan->savingTransactions()->delete();
+        if ($status !== 'closed') {
+            $plan->savingTransactions()->delete();
 
-        if ($status === 'draft') {
             return;
         }
+
+        if ($previousStatus !== 'active') {
+            return;
+        }
+
+        $plan->savingTransactions()->delete();
 
         $date = Carbon::create((int) $plan->year, (int) $plan->month, 1)->toDateString();
 

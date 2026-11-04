@@ -59,10 +59,11 @@ class SavingTest extends TestCase
         ];
 
         $this->actingAs($user)->post(route('budget-plans.store'), $payload('active'));
-        $this->assertSame(700000.0, (float) $saving->transactions()->sum('amount'));
+        $this->assertSame(0.0, (float) $saving->transactions()->sum('amount'));
 
         $plan = BudgetPlan::first();
-        $this->actingAs($user)->put(route('budget-plans.update', $plan), $payload('active') + ['x' => 1]);
+        $this->actingAs($user)->put(route('budget-plans.update', $plan), $payload('closed'));
+        $this->assertSame(700000.0, (float) $saving->transactions()->sum('amount'));
         $this->assertSame(1, $saving->transactions()->count());
     }
 

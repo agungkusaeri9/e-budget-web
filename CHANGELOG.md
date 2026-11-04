@@ -17,7 +17,7 @@ Rilis penuh e-Budget: perencanaan anggaran bulanan, pengeluaran rutin, tabungan 
   - Kolom kalkulasi otomatis **Kekurangan Target** (`Target - Saldo` atau status `Tercapai`).
   - Kartu ringkasan saldo otomatis per tempat penyimpanan beserta total saldo keseluruhan.
   - Halaman detail 3 kolom (Uang Masuk, Uang Keluar, Ringkasan + Form Penyesuaian Saldo manual tambah/kurang).
-  - Integrasi otomatis dengan Budget Plan: kategori pengeluaran bertanda **Termasuk Tabungan** otomatis membuat/memperbarui transaksi tabungan saat Budget Plan berstatus `active` atau `closed`.
+  - Integrasi otomatis dengan Budget Plan: kategori pengeluaran bertanda **Termasuk Tabungan** otomatis membuat transaksi tabungan saat status Budget Plan diubah dari `active` menjadi `closed`.
 
 - **Master Tempat Penyimpanan (Saving Providers CRUD)**:
   - Pengelolaan tempat penyimpanan tabungan (Bank Mandiri, BCA, Bibit, dll.) dengan nomor rekening/akun, atas nama, dan deskripsi bersifat opsional.

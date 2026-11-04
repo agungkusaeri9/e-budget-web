@@ -211,9 +211,9 @@ const submit = () => {
                                     Termasuk Tabungan
                                 </label>
                                 <p class="text-xs text-muted-foreground">
-                                    Nominal kategori ini pada Budget Plan
-                                    (aktif/closed) otomatis menambah saldo
-                                    tabungan terpilih.
+                                    Nominal kategori ini otomatis masuk ke
+                                    tabungan terpilih saat Budget Plan diubah
+                                    dari Aktif ke Selesai.
                                 </p>
                             </div>
                         </div>
