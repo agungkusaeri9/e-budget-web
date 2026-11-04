@@ -451,7 +451,6 @@ const submit = () => {
             </Button>
         </div>
 
-        <form @submit.prevent="submit" class="grid gap-6">
         <form @submit.prevent="submit" class="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
             <!-- KOLOM 1: Periode & Status + Ringkasan -->
             <div class="flex flex-col gap-4 lg:sticky lg:top-6 lg:col-span-5 xl:col-span-4">
