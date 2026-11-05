@@ -21,8 +21,8 @@ class ActivityLogRepository implements ActivityLogRepositoryInterface
                         });
                 });
             })
-            ->when($filters['user_id'] ?? null, function ($query, $userId) {
-                $query->where('user_id', $userId);
+            ->when(($filters['user_id'] ?? null) && $filters['user_id'] !== 'all', function ($query) use ($filters) {
+                $query->where('user_id', $filters['user_id']);
             })
             ->when($filters['start_date'] ?? null, function ($query, $startDate) {
                 $query->whereDate('created_at', '>=', $startDate);

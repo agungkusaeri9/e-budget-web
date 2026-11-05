@@ -83,11 +83,14 @@ const filterState = reactive({
 
 const isFilterVisible = ref(false);
 
-const applyFilters = useDebounceFn(() => {
+const buildParams = () => {
     const params: any = { ...filterState };
     if (params.user_id === 'all') delete params.user_id;
+    return params;
+};
 
-    router.get('/activity', params, {
+const applyFilters = useDebounceFn(() => {
+    router.get('/activity', buildParams(), {
         preserveState: true,
         replace: true,
     });
@@ -389,7 +392,7 @@ const perPageOptions = ['10', '20', '30', '40', '50', '100'];
                             size="icon"
                             class="h-8 w-8"
                             :disabled="!link.url"
-                            @click="link.url && router.get(link.url, { ...filterState }, { preserveState: true })"
+                            @click="link.url && router.get(link.url, buildParams(), { preserveState: true })"
                             aria-label="Halaman sebelumnya"
                         >
                             <ChevronLeft class="h-4 w-4" />
@@ -401,7 +404,7 @@ const perPageOptions = ['10', '20', '30', '40', '50', '100'];
                             size="icon"
                             class="h-8 w-8"
                             :disabled="!link.url"
-                            @click="link.url && router.get(link.url, { ...filterState }, { preserveState: true })"
+                            @click="link.url && router.get(link.url, buildParams(), { preserveState: true })"
                             aria-label="Halaman berikutnya"
                         >
                             <ChevronRight class="h-4 w-4" />
@@ -420,7 +423,7 @@ const perPageOptions = ['10', '20', '30', '40', '50', '100'];
                             size="sm"
                             class="h-8 min-w-8 px-2.5 text-xs font-medium"
                             :disabled="!link.url"
-                            @click="link.url && router.get(link.url, { ...filterState }, { preserveState: true })"
+                            @click="link.url && router.get(link.url, buildParams(), { preserveState: true })"
                         >
                             {{ link.label }}
                         </Button>
