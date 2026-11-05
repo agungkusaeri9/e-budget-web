@@ -2,12 +2,28 @@
 
 namespace Tests\Feature;
 
+use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class ReverseProxyTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_paginator_uses_https_when_app_url_is_https(): void
+    {
+        config(['app.url' => 'https://e-budget.masagung.my.id']);
+        (new AppServiceProvider(app()))->boot();
+
+        $this->get('http://e-budget.masagung.my.id/login');
+
+        $this->assertSame('https://e-budget.masagung.my.id/login', Paginator::resolveCurrentPath());
+
+        URL::forceScheme(null);
+        URL::forceRootUrl(null);
+    }
 
     public function test_redirect_uses_forwarded_host_and_scheme_from_reverse_proxy(): void
     {
